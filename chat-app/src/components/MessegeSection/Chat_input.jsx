@@ -1,8 +1,17 @@
 import React, { useState } from 'react'
+// import EmojiPicker from 'emoji-picker-react';
+// import {Emoji} from 'emoji-picker-react';
+import Picker from '@emoji-mart/react'
+import data from '@emoji-mart/data'
+// import 'emoji-mart/css/emoji-mart.css'
+
 
 export default function Chat_input({socket}) {
 
     const [message, setmessage] = useState("")
+    const [showEmojibar,setShowEmojibar]=useState(false);
+    const [SelectedEmoji,setSelectedEmoji]=useState(false);
+
     const sendmessage=(e)=>{
         e.preventDefault();
         if (message.trim()) {
@@ -14,6 +23,17 @@ export default function Chat_input({socket}) {
         }
         setmessage("")
     }
+
+  const handleEmojibar=()=>{
+    setShowEmojibar(!showEmojibar);
+  }
+  const handleEmojiClick=(Data)=>{
+    console.log(Data);
+    let msg=message;
+    msg+=Data.native;
+    setmessage(msg);
+  }
+     
   return (
     <div>
         <div className=" bg-gray-900 p-4 h-25 rounded-b-md">
@@ -44,6 +64,7 @@ export default function Chat_input({socket}) {
             <button
               type="button"
               className="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+              onClick={handleEmojibar}
             >
               <svg
                 aria-hidden="true"
@@ -60,6 +81,11 @@ export default function Chat_input({socket}) {
               </svg>
               <span className="sr-only">Add emoji</span>
             </button>
+            <div className='absolute bottom-24 md:bottom-40'>
+            {/* {showEmojibar && <EmojiPicker height={350} width={300} searchDisabled={true} onEmojiClick={handleEmojiClick} theme='dark' previewConfig={{showPreview:false}}  />} */}
+            {showEmojibar && <Picker data={data} onEmojiSelect={handleEmojiClick} previewPosition="none" emojiSize={20} dynamicWidth={true}/>}
+           
+            </div>
             <textarea
               id="chat"
               rows="1"
@@ -68,6 +94,7 @@ export default function Chat_input({socket}) {
               value={message}
               onChange={(e)=>setmessage(e.target.value)}
             ></textarea>
+            
             <button
               type="submit"
               className="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
