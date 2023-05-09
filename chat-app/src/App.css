@@ -29,3 +29,13 @@
 .messege{
     display: block;
 }
+
+
+em-emoji-picker {
+    --border-radius: 24px;
+
+    height: 350px;
+    min-height: 350px;
+    max-height: 800px;
+    width: 320px;
+  }
