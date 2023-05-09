@@ -95,4 +95,15 @@ router.post("/signin",async(req,res)=>{
     }
 })
 
+router.get("/get-all-user",async(req,res)=>{
+    try {
+        const alluser=await User.findAll({attributes: ['id','firstname', 'lastname']});
+        return res.status(200).json(alluser)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
+
+
 module.exports=router
