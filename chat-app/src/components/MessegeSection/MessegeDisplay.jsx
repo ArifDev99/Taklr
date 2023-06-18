@@ -16,7 +16,9 @@ export default function MessegeDisplay({ messages }) {
   }, [])
 
   return (
+
     <>
+    
       <div id="messege_display" className=" bg-gray-800 h-full w-full py-1 px-1 ">
         <div className=" h-full overflow-y-auto " ref={messageEl}>
         {messages.map((message) =>

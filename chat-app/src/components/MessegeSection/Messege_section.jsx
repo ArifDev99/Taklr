@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Chat_bar from "./chat_bar";
 import Chat_input from "./Chat_input";
 import MessegeDisplay from "./MessegeDisplay";
+import Dialog from "./Dialog";
 
 export default function Messege_section({socket}) {
   const [messages, setMessages] = useState([]);
@@ -18,7 +19,10 @@ export default function Messege_section({socket}) {
   return (
     <div className="flex-col justify-center items-center h-[70%] p-2 md:p-0 w-full">
        <Chat_bar/>
+       {messages.length !==0 ?
        <MessegeDisplay messages={messages} lastMessageRef={lastMessageRef}/>
+       :<Dialog/>
+       }
        <Chat_input socket={socket}/>
     </div>
   );

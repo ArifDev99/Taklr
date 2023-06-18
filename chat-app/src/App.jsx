@@ -14,7 +14,8 @@ import Signin from "./components/Signin";
 // import { io } from "socket.io-client";
 
 // import { Cookies } from "react-cookie";
-import Authchecker from "./Authchecker";
+import Authchecker from "./common/Authchecker";
+import { ChatState } from "./Contex/chatProvider";
 
 // const socket = io("http://localhost:4000");
 
@@ -33,7 +34,8 @@ import Authchecker from "./Authchecker";
 // console.log(cookie);
 
 
-const islogin=Authchecker();
+
+const isLogin= Authchecker();
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -42,7 +44,7 @@ const router = createBrowserRouter(
       <Route
        
         index
-        element={ islogin ? <Hero /> : <Navigate replace to={"/signup"} />}
+        element={ isLogin ?  <Hero />:<Navigate replace to ={"/signup"}/>} 
       />
       <Route path="/signin" index element={<Signin />} />
       <Route path="/signup" index element={<Signup />} />
@@ -50,20 +52,16 @@ const router = createBrowserRouter(
   )
 );
 
-
 function App() {
-  
-  // const [loggedIn, setloggedIn] = useState(false);
+    // const {user}=ChatState();
 
-  //  useEffect(() => {
-  //    setloggedIn(Authchecker());
-   
-  // }, [loggedIn]);
-   
-
+  // console.log(isLogin)
 
   return (
     <RouterProvider router={router} />
+    // <RouterProvider router={router}>
+    //   <Route path="/" element={isLogin ? <Navigate to="/" replace /> : <Navigate replace to ={"/signup"}/>} />
+    // </RouterProvider>
   );
 }
 

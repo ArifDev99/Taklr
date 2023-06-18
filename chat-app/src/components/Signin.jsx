@@ -19,7 +19,7 @@ export default function Signin() {
 
     // }
 
-    let req =await fetch('http://localhost:4000/api/v1/signin',{
+    let req =await fetch('http://localhost:4000/api/v1/user/login',{
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -28,16 +28,16 @@ export default function Signin() {
       body: JSON.stringify(userDetails)
     })
 
-    let message=await req.json();
-    if (message.message!=="Successfully Login"){
-      alert(message.message)
+    let data=await req.json();
+    if (data.message!=="Successfully Login"){
+      alert(data.message)
     }
     else{
       // const cookies = new Cookies();
       // cookies.set("accessToken",message.accessToken)
       // console.log(message);
-      localStorage.setItem("accessToken",message.accessToken);
-      localStorage.setItem("firstName",message.firstname);
+      localStorage.setItem("userInfo",JSON.stringify(data));
+      // localStorage.setItem("firstName",message.firstname);
       window.location.href="http://127.0.0.1:5173/"
 
     }

@@ -1,9 +1,17 @@
 const express=require("express");
+const dotenv=require("dotenv")
+
 const app=express();
-const routes=require("./Routes/authRoutes")
+const userRoutes=require("./Routes/userRoutes")
 
 const http=require("http").Server(app);
 const cors = require('cors');
+const connectDB = require("./config/db2");
+
+
+dotenv.config();
+connectDB();
+
 
 
 app.use(cors())
@@ -13,7 +21,6 @@ app.use(express.json());
 
 // Acceept body
 app.use(express.urlencoded({extended:true}))
-
 
 // const server=http.createServer(app);
 // const io=new Server(server);
@@ -36,10 +43,15 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
       console.log('🔥: A user disconnected');
     });
+
+    socket.off("setup", () => {
+      console.log("USER DISCONNECTED");
+      socket.leave(userData._id);
+    });
 });
 
 
-app.use("/api/v1",routes)
+app.use("/api/v1/user",userRoutes)
 
 
 // app.get('/', (req, res) => {
