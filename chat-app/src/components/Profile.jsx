@@ -7,7 +7,7 @@ export default function Profile() {
   const [searchResult, setSearchResult] = useState([]);
 
   const {
-    user
+    user,chats,setChats,setSelectedChat
   } = ChatState();
 
   const handleSearch= async ()=>{
@@ -28,6 +28,25 @@ export default function Profile() {
       
     }
 
+  }
+
+  const accessChat=async(userId)=>{
+    console.log(userId);
+    const config = {
+      method:"POST",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+      body:JSON.stringify({"userid":userId})
+    };
+
+    let data= await fetch("http://localhost:4000/api/v1/chat/",config).then((res)=>res.json());
+    if(!chats.find((c)=>c._id===data._id)){
+      setChats([data,...chats]);
+    }
+    setSelectedChat(data)
+    console.log(data);
   }
 
   return (
@@ -66,13 +85,14 @@ export default function Profile() {
               />
             </svg>
           </button>
+          
         </div>
         <div className="flex flex-col text-white">
           {searchResult?.map((search_User) => (
                   <UserListItem
                     key={search_User._id}
                     search_User={search_User}
-                    // handleFunction={() => accessChat(user._id)}
+                    handleFunction={() => accessChat(search_User._id)}
                   />
                 ))
           }

@@ -23,11 +23,11 @@ export default function Hero() {
   return (
     <>
     <div >
-        <div className='flex justify-center h-[calc(100vh-4rem)] overflow-hidden sm:h-full' >
-            <div className='sidebar  w-1/5 md:hidden '>
+        <div className='flex justify-center h-[calc(100vh-4rem)] overflow-hidden sm:h-full mx-5' >
+            {/* <div className='sidebar  w-1/5 hidden '>
               <Sidebar/>
-            </div>
-            <div className='messges-section w-4/5 bg-neutral-700  overflow-hidden sm:w-full sm:flex-col md:w-full' >
+            </div> */}
+            <div className='messges-section w-full px-1 bg-neutral-700  overflow-hidden sm:w-full sm:flex-col md:w-full' >
                 {/* Messege Section */}
               <div className="w-full h-screen flex py-2">
                 <div className='w-1/5 h-screen md:w-full sm:hidden'><MessegeList/></div>

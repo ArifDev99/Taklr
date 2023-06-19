@@ -91,6 +91,7 @@ const authUser=async(req,res)=>{
         return res.status(200).json(
             {
                 message:"Successfully Login",
+                _id:isuserexits._id,
                 firstname:isuserexits.firstname,
                 lastname:isuserexits.lastname,
                 profile:isuserexits.profile_img,
