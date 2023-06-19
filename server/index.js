@@ -3,7 +3,7 @@ const dotenv=require("dotenv")
 
 const app=express();
 const userRoutes=require("./Routes/userRoutes")
-
+const chatRoutes=require("./Routes/chatRoutes")
 const http=require("http").Server(app);
 const cors = require('cors');
 const connectDB = require("./config/db2");
@@ -51,7 +51,9 @@ io.on('connection', (socket) => {
 });
 
 
-app.use("/api/v1/user",userRoutes)
+app.use("/api/v1/user",userRoutes);
+
+app.use("/api/v1/chat",chatRoutes);
 
 
 // app.get('/', (req, res) => {

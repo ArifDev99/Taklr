@@ -136,12 +136,11 @@ export default function Signup() {
           </div>
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-              Choose A Image<span className="req">*</span>
+              Choose A Image
             </label>
             <input
               className="border border-sky-500 sm:text-sm rounded-lg  focus:outline-none focus:ring-sky-500 focus:ring-1 block w-full p-2.5 placeholder-gray-400"
               type="file"
-              required
               accept="image/*"
               onChange={(e)=>{postanImage(e.target.files[0])}}
             />

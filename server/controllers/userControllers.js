@@ -30,9 +30,12 @@ const registerUser=async (req,res)=>{
 
         
         const hashedPassword= await bcrypt.hash(password,10)
-
+        
         let user={firstname,lastname,email,password:hashedPassword,profile_img}
-
+        if(profile_img.length===0){
+            user={firstname,lastname,email,password:hashedPassword}
+        }
+        
         const createUser=await User.create(user);
 
 
