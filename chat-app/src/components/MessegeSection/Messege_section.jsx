@@ -20,7 +20,7 @@ export default function Messege_section({socket}) {
   //   lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' });
   // }, [messages]);
   return (
-    <div className="flex-col justify-center items-center h-[70%] p-2 md:p-0 w-full">
+    <div className="flex-col justify-center items-center h-[70%] px-1 md:p-0 w-full">
        <Chat_bar/>
        {messages.length !==0 && !selectChat?
        <MessegeDisplay messages={messages} lastMessageRef={lastMessageRef}/>

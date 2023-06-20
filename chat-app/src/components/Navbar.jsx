@@ -14,7 +14,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className="sticky top-0 flex h-14 justify-between ietms-center p-2 bg-neutral-700 mb-2">
+    <div className="sticky top-0 flex h-14 justify-between ietms-center p-2 bg-gray-600 mb-2">
       <NavLink to="/" end>
         <img className="w-10 h-10  rounded-lg " src={logo} alt="" />
       </NavLink>
