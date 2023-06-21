@@ -62,7 +62,7 @@ export default function Navbar() {
                 className=" w-8 h-8 rounded-full object-cover mx-2"
                 src={user?.profile}
                 alt="profile image"
-                srcset=""
+                srcSet=""
               />
                 {user.firstname}
                 <svg

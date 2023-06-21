@@ -1,36 +1,117 @@
-import React from "react";
+import React, { useState } from "react";
+import { ChatState } from "../Contex/chatProvider";
+import UserListItem from "./UserListItem";
+import BadgedUser from "./BadgedUser";
 
-function DroupDown({header}) {
+function DroupDown({header , close}) {
+  const [search, setSearch] = useState("");
+
+  const [groupchatName,setgroupchatName]=useState("");
+  const [searchResult, setSearchResult] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const { user, chats, setChats, setSelectedChat } = ChatState();
+
+  const handleSulbmit= async()=>{
+    if(!groupchatName || !selectedUsers ){
+      alert("Please Fill Both Fileds")
+      return ;
+    }
+    try {
+      const config = {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${user.accessToken}`,
+        },
+        body:JSON.stringify({
+          name: groupchatName,
+          users: JSON.stringify(selectedUsers.map((u) => u._id)),
+        })
+      }
+      let data = await fetch("http://localhost:4000/api/v1/chat/group", config).then(
+      (res) => res.json());
+      setChats([data,...chats]);
+      setSelectedChat(data)
+      close(false)
+      
+    } catch (error) {
+      alert(error);
+      return;
+    }
+  };
+
+  const handleSearch = async (query) => {
+    if(!query){
+      return ;
+    }
+    setSearch(query);
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.accessToken}`,
+        },
+      };
+
+      const fetchdata = await fetch(
+        `http://localhost:4000/api/v1/user?search=${search}`,
+        config
+      ).then((res) => res.json());
+      setSearchResult(fetchdata);
+      console.log(fetchdata);
+    } catch (error) {
+      alert("Cannot fetch");
+    }
+  };
+
+  const selectFrined=(friend)=>{
+    if (selectedUsers.includes(friend,0)) {
+      alert("user already Added!");
+    }else{
+      setSelectedUsers([...selectedUsers,friend]);
+      
+    }
+    setSearch("");
+    
+  };
+  console.log("Selected UserLIst",selectedUsers);
+
+  const handleDelete=(Deluser)=>{
+
+    setSelectedUsers(selectedUsers.filter((sel)=>sel._id !==Deluser._id));
+
+  }
   return (
-    <div class="flex flex-col w-full max-w-md px-4 py-2 bg-white rounded-lg shadow dark:bg-gray-800 sm:px-6 md:px-2 lg:px-10">
-      <div class="self-center mb-2 text-xl font-light text-gray-600 sm:text-2xl dark:text-white">
+    <div className="flex flex-col w-full max-w-md px-4 py-2 bg-white rounded-lg shadow dark:bg-gray-800 sm:px-6 md:px-2 lg:px-10">
+      <div className="self-center mb-2 text-xl font-light text-gray-600 sm:text-2xl dark:text-white">
         {header}
       </div>
       <div>
-        <form action="#" autoComplete="off">
-          <div class="flex flex-col mb-2">
-            <div class="flex relative ">
+        <div >
+          <div className="flex flex-col mb-2">
+            <div className="flex relative ">
               <input
                 type="text"
                 id="sign-in-email"
-                class=" rounded-lg flex-1 appearance-none bg-black border border-gray-300 w-full py-2 px-4  text-gray-700 placeholder-gray-200 shadow-sm text-base focus:outline-none focus:ring-1 focus:border-transparent"
+                className=" rounded-lg flex-1 appearance-none bg-black border border-gray-300 w-full py-2 px-4  text-gray-700 placeholder-gray-200 shadow-sm text-base focus:outline-none focus:ring-1 focus:border-transparent"
                 placeholder="Your Group Name"
+                onChange={(e)=>setgroupchatName(e.target.value)}
               />
             </div>
           </div>
-            <div class="flex items-center mt-2 mb-1">
-              <div class="flex ml-auto">
-                <a
-                  href="#"
-                  class="inline-flex text-xs font-thin text-gray-500 sm:text-sm dark:text-gray-100 hover:text-gray-700 dark:hover:text-white"
-                >
-                 Eaxmple (Tom, Jerrey,...)
-                </a>
-              </div>
+          {header !== "Rename Group" && <div className="flex items-start mt-2 mb-1">
+            <div className="flex ">
+              <p
+                href="#"
+                className="inline-flex text-xs font-thin text-gray-500 sm:text-sm dark:text-gray-100 hover:text-gray-700 dark:hover:text-white"
+              >
+                Eaxmple (Tom, Jerrey,...)
+              </p>
             </div>
-          <div class="flex flex-col mb-6">
-            <div class="flex relative ">
-              <span class="rounded-l-md inline-flex  items-center px-3 border-t bg-black border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">
+          </div>
+          }
+          {header !== "Rename Group" &&<div className="flex flex-col mb-2">
+            <div className="flex relative ">
+              <span className="rounded-l-md inline-flex  items-center px-3 border-t bg-black border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
@@ -45,30 +126,40 @@ function DroupDown({header}) {
                 </svg>
               </span>
               <input
-                type="password"
+                type="text"
                 id="sign-in-email"
-                class=" rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-black text-gray-200 placeholder-gray-200 shadow-sm text-base focus:outline-none focus:ring-1"
+                className=" rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-black text-gray-200 placeholder-gray-200 shadow-sm text-base focus:outline-none focus:ring-1"
                 placeholder="Search Friend"
+                onChange={(e)=>handleSearch(e.target.value)}
               />
             </div>
           </div>
-          <div class="flex w-full">
+          }
+          <div className="flex mb-1 max-h-36  justify-center items-center overflow-hidden">
+            <div className="flex max-w-full max-h-36 flex-col gap-2  overflow-y-auto ">
+
+              {selectedUsers.map((u)=>(<BadgedUser key={u._id} user={u} handleFunction={()=>handleDelete(u)}/>))}
+            </div>
+          </div>
+          <div className="flex w-full">
             <button
-              type="submit"
-              class="py-2 px-4  bg-gray-900 hover:bg-gray-600 focus:ring-black  text-gray-200 w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+              type="button"
+              className="py-2 px-4  bg-gray-700 hover:bg-gray-900 focus:ring-black  text-gray-200 w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+              onClick={handleSulbmit}
             >
               submit
             </button>
           </div>
-        </form>
+        </div>
       </div>
-      {/* <div class="flex items-center justify-center mt-6">
+      {searchResult?.slice(0,2).map((user)=>(<UserListItem key={user._id} search_User={user} handleFunction={() => selectFrined(user)}/>))}
+      {/* <div className="flex items-center justify-center mt-6">
         <a
           href="#"
           target="_blank"
-          class="inline-flex items-center text-xs font-thin text-center text-gray-500 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white"
+          className="inline-flex items-center text-xs font-thin text-center text-gray-500 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white"
         >
-          <span class="ml-2">You don&#x27;t have an account?</span>
+          <span className="ml-2">You don&#x27;t have an account?</span>
         </a>
       </div>*/}
     </div> 

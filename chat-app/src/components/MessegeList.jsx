@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { ChatState } from "../Contex/chatProvider";
 import { getSenderImg, getSenderName } from "./utils/chatLogis";
 export default function MessegeList() {
-  const [loggedUser, setLoggedUser] = useState();
+  // const [loggedUser, setLoggedUser] = useState();
   const [allChats, setAllChats] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { user, chats, setChats,selectedChat,setSelectedChat } = ChatState();
+  const { user, chats, setChats,selectedChat,setSelectedChat,loggedUser, setLoggedUser } = ChatState();
 
   const fecthChats = async () => {
     let data = await fetch("http://localhost:4000/api/v1/chat", {
@@ -22,7 +22,7 @@ export default function MessegeList() {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fecthChats();
   }, [user]);
-  console.log(loggedUser);
+  
   return (
     <div className="flex flex-col h-full p-1 rounded-lg bg-gray-900 justify-center items-center mx-1">
       <div className="flex py-2 justify-between items-center pl-2 w-full  text-sm font-medium text-white border-b-2">
@@ -45,7 +45,7 @@ export default function MessegeList() {
                       : getSenderImg(loggedUser, chat.users)
                   }
                   alt="profile image"
-                  srcset=""
+                  srcSet=""
                 />
                 {chat.isGroupChat
                   ? chat.chatName

@@ -58,7 +58,7 @@ export default function Profile() {
   return (
     <div className="flex justify-center  ml-0.5 w-full h-full overflow-hidden">
       {!showSidedrawer ?
-        (<div className="p-2 flex cursor-pointer flex-col  w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-900 dark:border-gray-700">
+        (<div className="p-2 flex cursor-pointer flex-col  w-full h-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-900 dark:border-gray-700 overflow-y-auto">
         {/* <div className=" mb-4 flex w-full flex-wrap items-stretch">
           <input
             type="search"
@@ -120,7 +120,7 @@ export default function Profile() {
           </svg>
           <p>Create Group Chat</p>
         </div>
-        {showCreateGroup && <DroupDown header={"Create Group"}/>}
+        {showCreateGroup && <DroupDown header={"Create Group"} close={setCreateGroup}/>}
         <div className="py-2 my-1 gap-2 px-4 flex justify-center items-center bg-gray-800 hover:bg-gray-500 focus:bg-neutral-900  text-white  transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none  rounded-lg " onClick={()=>setRenameGroup(!showRenameGroup)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"

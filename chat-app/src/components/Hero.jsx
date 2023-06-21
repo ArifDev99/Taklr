@@ -1,16 +1,19 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import MessegeDisplay from './MessegeSection/MessegeDisplay'
 import MessegeList from './MessegeList'
 import Profile from './Profile'
 // import Sidebar from './Sidebar'
 import { io } from "socket.io-client";
 import Messege_section from './MessegeSection/Messege_section'
+// import Sidedrawer from './Sidedrawer';
+// import SideDrawer2 from './SideDrawer2';
 
 
 
 
 export default function Hero() {
   const socket = io("http://localhost:4000");
+  // const [showSidedrawer,setShowSideDrawer]=useState(false);
   
   useEffect(() => {
     socket.on("connect", function()  {
@@ -30,9 +33,9 @@ export default function Hero() {
             <div className='messges-section w-full px-1 bg-gray-600  overflow-hidden sm:w-full sm:flex-col md:w-full' >
                 {/* Messege Section */}
               <div className="w-full h-screen flex py-2">
-                <div className='w-1/5 h-screen md:w-full '><MessegeList/></div>
-                <div className='w-3/5 h-screen md:w-full sm:px-4'><Messege_section socket={socket} /></div>
-                <div className='w-1/5 h-screen md:w-full sm:hidden'><Profile/></div>
+                <div className='w-1/5 h-full  md:w-full pb-16'><MessegeList/></div>
+                <div className='w-3/5 h-full pb-16 md:w-full xl:h-full sm:px-4'><Messege_section socket={socket} /></div>
+                <div className='w-1/5 h-full pb-16 md:w-full sm:hidden'><Profile /></div>
               </div>
             </div>
         </div>
