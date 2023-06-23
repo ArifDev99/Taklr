@@ -3,23 +3,59 @@ import React, { useState } from "react";
 // import {Emoji} from 'emoji-picker-react';
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
+import { ChatState } from "../../Contex/chatProvider";
 // import 'emoji-mart/css/emoji-mart.css'
 
-export default function Chat_input({ socket }) {
+export default function Chat_input({ socket, fetchAgain,setFetchAgain }) {
+
   const [message, setmessage] = useState("");
   const [showEmojibar, setShowEmojibar] = useState(false);
   const [SelectedEmoji, setSelectedEmoji] = useState(false);
 
-  const sendmessage = (e) => {
-    e.preventDefault();
-    if (message.trim()) {
-      socket.emit("send_message", {
-        text: message,
-        name: `${localStorage.getItem("firstName")}`,
-        id: `${socket.id}${Math.random()}`,
-      });
-    }
-    setmessage("");
+  const {user,selectedChat,setSelectedChat}=ChatState();
+
+
+  const sendmessage = async (event) => {
+    console.log("Send Message Clicked");
+    // event.preventDefault();
+    // if(event.key==="Enter" && message){
+
+      if (message.trim()) {
+        // socket.emit("send_message", {
+        //   text: message,
+        //   name: `${localStorage.getItem("firstName")}`,
+        //   id: `${socket.id}${Math.random()}`,
+        // });
+        
+        if (!user || !user.accessToken) {
+          // Handle the case when user.accessToken is null or undefined
+          console.log('Access token not available');
+          return;
+        }
+        try {
+          const config = {
+            method: "POST",
+            headers: {
+              "Content-type": "application/json",
+              Authorization: `Bearer ${user.accessToken}`,
+            },
+            body:JSON.stringify({
+              content: message,
+              chatId: selectedChat._id,
+            })
+          };
+
+          setmessage("");
+          let data=await fetch("http://localhost:4000/api/v1/message/",config).then((res)=>res.json());
+          console.log(data);
+          setFetchAgain(!fetchAgain);
+          
+        } catch (error) {
+          alert("Cant Send the Message");
+        }
+      }
+
+    // }
   };
 
   const handleEmojibar = () => {
@@ -34,7 +70,7 @@ export default function Chat_input({ socket }) {
 
   return (
     <div className=" bg-gray-900 p-4 h-25 rounded-b-md w-full">
-      <form onSubmit={sendmessage}>
+      <form >
         <label htmlFor="chat" className="sr-only">
           Your message
         </label>
@@ -100,8 +136,9 @@ export default function Chat_input({ socket }) {
           ></textarea>
 
           <button
-            type="submit"
+            type="button"
             className="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
+            onClick={sendmessage}
           >
             <svg
               aria-hidden="true"

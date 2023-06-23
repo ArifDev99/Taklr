@@ -16,6 +16,12 @@ function DroupDown({header , close}) {
       alert("Please Fill Both Fileds")
       return ;
     }
+
+    if (!user || !user.accessToken) {
+      // Handle the case when user.accessToken is null or undefined
+      console.log('Access token not available');
+      return;
+    }
     try {
       const config = {
         method: "POST",
@@ -43,6 +49,11 @@ function DroupDown({header , close}) {
   const handleSearch = async (query) => {
     if(!query){
       return ;
+    }
+    if (!user || !user.accessToken) {
+      // Handle the case when user.accessToken is null or undefined
+      console.log('Access token not available');
+      return;
     }
     setSearch(query);
     try {
@@ -91,7 +102,6 @@ function DroupDown({header , close}) {
             <div className="flex relative ">
               <input
                 type="text"
-                id="sign-in-email"
                 className=" rounded-lg flex-1 appearance-none bg-black border border-gray-300 w-full py-2 px-4  text-gray-700 placeholder-gray-200 shadow-sm text-base focus:outline-none focus:ring-1 focus:border-transparent"
                 placeholder="Your Group Name"
                 onChange={(e)=>setgroupchatName(e.target.value)}
@@ -138,7 +148,7 @@ function DroupDown({header , close}) {
           <div className="flex mb-1 max-h-36  justify-center items-center overflow-hidden">
             <div className="flex max-w-full max-h-36 flex-col gap-2  overflow-y-auto ">
 
-              {selectedUsers.map((u)=>(<BadgedUser key={u._id} user={u} handleFunction={()=>handleDelete(u)}/>))}
+              {selectedUsers?.map((u)=>(<BadgedUser key={u._id} user={u} handleFunction={()=>handleDelete(u)}/>))}
             </div>
           </div>
           <div className="flex w-full">

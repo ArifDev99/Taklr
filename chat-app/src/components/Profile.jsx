@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { ChatState } from "../Contex/chatProvider";
 // import UserListItem from "./UserListItem";
-import Sidedrawer from "./Sidedrawer";
+import Sidedrawer from "./Search";
 import DroupDown from "./DroupDown";
+import Search from "./Search";
+import SideDrawer from "./Sidedrawer";
 
 export default function Profile() {
   // const [search, setSearch] = useState("");
@@ -11,7 +13,18 @@ export default function Profile() {
   const [showCreateGroup, setCreateGroup] = useState(false);
   const [showRenameGroup, setRenameGroup] = useState(false);
 
+  
   const { user, chats, setChats, setSelectedChat } = ChatState();
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const openDrawer = () => {
+    setIsDrawerOpen(true);
+  };
+
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+  };
 
   // const handleSearch = async () => {
   //   try {
@@ -57,7 +70,7 @@ export default function Profile() {
 
   return (
     <div className="flex justify-center  ml-0.5 w-full h-full overflow-hidden">
-      {!showSidedrawer ?
+      {/* {!showSidedrawer ? */}
         (<div className="p-2 flex cursor-pointer flex-col  w-full h-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-900 dark:border-gray-700 overflow-y-auto">
         {/* <div className=" mb-4 flex w-full flex-wrap items-stretch">
           <input
@@ -92,7 +105,7 @@ export default function Profile() {
           </button>
           
         </div> */}
-        <div className="my-1 py-2 px-4 gap-2 flex justify-center items-center bg-gray-800 hover:bg-gray-500 focus:bg-neutral-900  text-white  transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none  rounded-lg " onClick={() => setShowSideDrawer(!showSidedrawer)}>
+        <div className="my-1 py-2 px-4 gap-2 flex justify-center items-center bg-gray-800 hover:bg-gray-500 focus:bg-neutral-900  text-white  transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none  rounded-lg " onClick={openDrawer}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
@@ -107,7 +120,14 @@ export default function Profile() {
           </svg>
           <p>Search</p>
         </div>
-        <div className="py-2 my-1 gap-2 px-4 flex justify-center items-center bg-gray-800 hover:bg-gray-500 focus:bg-neutral-900  text-white  transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none  rounded-lg  " onClick={()=>setCreateGroup(!showCreateGroup)}>
+        <SideDrawer isOpen={isDrawerOpen} onClose={closeDrawer}>
+        {/* Content of the side drawer */}
+        <Search/>
+      </SideDrawer>
+
+        <div className="py-2 my-1 gap-2 px-4 flex justify-center items-center bg-gray-800 hover:bg-gray-500 focus:bg-neutral-900  text-white  transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none  rounded-lg  " 
+        onClick={()=>setCreateGroup(!showCreateGroup)}
+        >
           <svg
             width="20"
             height="20"
@@ -121,7 +141,8 @@ export default function Profile() {
           <p>Create Group Chat</p>
         </div>
         {showCreateGroup && <DroupDown header={"Create Group"} close={setCreateGroup}/>}
-        <div className="py-2 my-1 gap-2 px-4 flex justify-center items-center bg-gray-800 hover:bg-gray-500 focus:bg-neutral-900  text-white  transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none  rounded-lg " onClick={()=>setRenameGroup(!showRenameGroup)}>
+        <div className="py-2 my-1 gap-2 px-4 flex justify-center items-center bg-gray-800 hover:bg-gray-500 focus:bg-neutral-900  text-white  transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none  rounded-lg " 
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="1.2em"
@@ -133,7 +154,7 @@ export default function Profile() {
           </svg>
           <p>Rename Group</p>
         </div>
-        {showRenameGroup && <DroupDown header={"Rename Group"} />}
+        {/* {showRenameGroup && <DroupDown header={"Rename Group"} />} */}
         <div className="py-2 my-1 px-4 flex justify-center items-center bg-gray-800 hover:bg-gray-500 focus:bg-neutral-900  text-white  transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none  rounded-lg ">
           Search
         </div>
@@ -171,7 +192,7 @@ export default function Profile() {
         
       </div>
       ):
-      (<Sidedrawer showSidedrawer={showSidedrawer} setShowSideDrawer={setShowSideDrawer}/>)}
+      {/* (<Search showSidedrawer={showSidedrawer} setShowSideDrawer={setShowSideDrawer}/>)} */}
     </div>
   );
 }

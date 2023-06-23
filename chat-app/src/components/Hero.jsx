@@ -12,6 +12,8 @@ import Messege_section from './MessegeSection/Messege_section'
 
 
 export default function Hero() {
+  const [fetchAgain, setFetchAgain] = useState(false);
+
   const socket = io("http://localhost:4000");
   // const [showSidedrawer,setShowSideDrawer]=useState(false);
   
@@ -33,8 +35,8 @@ export default function Hero() {
             <div className='messges-section w-full px-1 bg-gray-600  overflow-hidden sm:w-full sm:flex-col md:w-full' >
                 {/* Messege Section */}
               <div className="w-full h-screen flex py-2">
-                <div className='w-1/5 h-full  md:w-full pb-16'><MessegeList/></div>
-                <div className='w-3/5 h-full pb-16 md:w-full xl:h-full sm:px-4'><Messege_section socket={socket} /></div>
+                <div className='w-1/5 h-full  md:w-full pb-16'><MessegeList fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}/></div>
+                <div className='w-3/5 h-full pb-16 md:w-full xl:h-full sm:px-4'><Messege_section socket={socket}  fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} /></div>
                 <div className='w-1/5 h-full pb-16 md:w-full sm:hidden'><Profile /></div>
               </div>
             </div>
