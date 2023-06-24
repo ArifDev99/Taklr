@@ -7,6 +7,8 @@ import { ChatState } from "../../Contex/chatProvider";
 import MessegeList from "../MessegeList";
 import { io } from "socket.io-client";
 
+import Loading from "../../common/Loading";
+
 var selectedChatCompare;
 export default function Messege_section({ socket, fetchAgain, setFetchAgain }) {
   const [allMessages, setallMessages] = useState([]);
@@ -15,6 +17,7 @@ export default function Messege_section({ socket, fetchAgain, setFetchAgain }) {
   
   const [typing, setTyping] = useState(false);
   const [istyping, setIsTyping] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const lastMessageRef = useRef(null);
   const { user, selectedChat,notification, setNotification } = ChatState();
@@ -38,6 +41,7 @@ export default function Messege_section({ socket, fetchAgain, setFetchAgain }) {
   }, [allMessages]);
 
   const fetchAllMessages = async () => {
+    setIsLoading(true);
     // console.log("FetchAll Message Called");
     // console.log(selectedChat);
     if (!user || !user.accessToken) {
@@ -58,12 +62,14 @@ export default function Messege_section({ socket, fetchAgain, setFetchAgain }) {
         `http://localhost:4000/api/v1/message/${selectedChat._id}`,
         config
         ).then((res) => res.json());
-        console.log(data);
+        // console.log(data);
+        setIsLoading(false);
         setallMessages(data);
         // setFetchAgain(!fetchAgain);
         socket.emit("join chat", selectedChat._id);
       } catch (error) {
         // alert("Cant fetch the Messages");
+        setIsLoading(false)
         console.log("Can't Fetch the Messages");
       }
     };
@@ -104,6 +110,8 @@ export default function Messege_section({ socket, fetchAgain, setFetchAgain }) {
         <MessegeList fetchAgain={fetchAgain} />
       ) : (
         <div className="flex flex-col justify-center h-full  px-1 md:p-0 ">
+          {isLoading ? <Loading/>:
+          <>
           <Chatbar
             fetchAgain={fetchAgain}
             setFetchAgain={setFetchAgain}
@@ -129,6 +137,7 @@ export default function Messege_section({ socket, fetchAgain, setFetchAgain }) {
             istyping={istyping}
             
           />
+          </>}
         </div>
       )}
     </>

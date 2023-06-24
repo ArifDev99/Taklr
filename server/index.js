@@ -77,8 +77,8 @@ io.on('connection', (socket) => {
     //   console.log('🔥: A user disconnected');
     // });
     socket.on('disconnect',()=>{
+      console.log("USER DISCONNECTED");
       socket.off("setup", () => {
-        console.log("USER DISCONNECTED");
         socket.leave(userData._id);
       });
 

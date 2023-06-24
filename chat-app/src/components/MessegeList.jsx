@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { ChatState } from "../Contex/chatProvider";
 import { getSenderImg, getSenderName } from "./utils/chatLogis";
+import Loading from "../common/Loading";
+
+
+
+
+
 export default function MessegeList({fetchAgain, setFetchAgain}) {
   // const [loggedUser, setLoggedUser] = useState();
   const [allChats, setAllChats] = useState(null);
@@ -9,6 +15,7 @@ export default function MessegeList({fetchAgain, setFetchAgain}) {
   const { user, chats, setChats,selectedChat,setSelectedChat,loggedUser, setLoggedUser } = ChatState();
 
   const fecthChats = async () => {
+    setIsLoading(true);
     if (!user || !user.accessToken) {
       // Handle the case when user.accessToken is null or undefined
       console.log('Access token not available');
@@ -20,11 +27,14 @@ export default function MessegeList({fetchAgain, setFetchAgain}) {
           Authorization: `Bearer ${user.accessToken}`,
         },
       }).then((res) => res.json());
+      setIsLoading(false);
       setAllChats(data);
       setChats(data);
-      console.log(data);
+      // console.log(data);
+      
       
     } catch (error) {
+      setIsLoading(false);
       console.log('Error fetching chats:', error);
     }
   };
@@ -38,6 +48,7 @@ export default function MessegeList({fetchAgain, setFetchAgain}) {
       <div className="flex py-2 justify-between items-center pl-2 w-full  text-sm font-medium text-white border-b-2">
         My Chats
       </div>
+      {/* {isLoading ? <Loading/>: */}
       <div className="flex flex-col p-2 w-full h-full overflow-y-hidden ">
         {chats ? (
           <div className="overflow-y-scroll flex flex-col gap-1 cursor-pointer">
@@ -74,6 +85,7 @@ export default function MessegeList({fetchAgain, setFetchAgain}) {
           ""
         )}
       </div>
+      {/* } */}
     </div>
   );
 }
