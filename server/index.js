@@ -10,6 +10,9 @@ const messageRoutes=require("./Routes/messageRoutes");
 const http=require("http").Server(app);
 const cors = require('cors');
 const connectDB = require("./config/db2");
+const { log } = require("console");
+const { loadavg } = require("os");
+const { disconnect } = require("process");
 
 
 dotenv.config();
@@ -36,21 +39,50 @@ const io= require('socket.io')(http, {
 });
 
 io.on('connection', (socket) => {
-    console.log(`⚡: ${socket.id} user just connected!`);
+  
+    socket.on("setup",(userData)=>{
+      console.log(`⚡: ${userData._id} user just connected!`);
+      if(userData && userData._id){
 
-    socket.on("send_message",function(data){
-      io.sockets.emit("update",data);
-      console.log(data)
+        socket.join(userData._id);
+        socket.emit("Connected",socket.id);
+      }else{
+        console.log("userdat is missing");
+      }
     })
 
-    socket.on('disconnect', () => {
-      console.log('🔥: A user disconnected');
-    });
+    socket.on("join chat",(room)=>{
+      socket.join(room)
+      console.log("user joined room: "+room);
+    })
 
-    socket.off("setup", () => {
-      console.log("USER DISCONNECTED");
-      socket.leave(userData._id);
-    });
+    socket.on("typing", (room) => socket.in(room).emit("typing"));
+    socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+
+    socket.on("send_message",function(newMessageRecieved){
+      var chat=newMessageRecieved.chat
+      if(!chat.users) return console.log("Chat.users not defined");
+
+      chat.users.forEach(user => {
+       
+        if(user._id === newMessageRecieved.sender._id) return ;
+
+        socket.in(user._id).emit("message recieved",newMessageRecieved)
+      });
+      // io.sockets.emit("update",data);
+      // console.log(data)
+    })
+
+    // socket.on('disconnect', () => {
+    //   console.log('🔥: A user disconnected');
+    // });
+    socket.on('disconnect',()=>{
+      socket.off("setup", () => {
+        console.log("USER DISCONNECTED");
+        socket.leave(userData._id);
+      });
+
+    })
 });
 
 

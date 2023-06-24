@@ -6,20 +6,21 @@ import data from "@emoji-mart/data";
 import { ChatState } from "../../Contex/chatProvider";
 // import 'emoji-mart/css/emoji-mart.css'
 
-export default function Chat_input({ socket, fetchAgain,setFetchAgain }) {
+export default function Chat_input({ socket, fetchAgain,setFetchAgain ,allMessages, setallMessages,typing, setTyping,istyping}) {
 
   const [message, setmessage] = useState("");
   const [showEmojibar, setShowEmojibar] = useState(false);
   const [SelectedEmoji, setSelectedEmoji] = useState(false);
+  
 
   const {user,selectedChat,setSelectedChat}=ChatState();
 
 
   const sendmessage = async (event) => {
-    console.log("Send Message Clicked");
+    // console.log("Send Message Clicked");
     // event.preventDefault();
     // if(event.key==="Enter" && message){
-
+      socket.emit('stop typing',selectedChat._id)
       if (message.trim()) {
         // socket.emit("send_message", {
         //   text: message,
@@ -48,6 +49,8 @@ export default function Chat_input({ socket, fetchAgain,setFetchAgain }) {
           setmessage("");
           let data=await fetch("http://localhost:4000/api/v1/message/",config).then((res)=>res.json());
           console.log(data);
+          setallMessages([...allMessages,data]);
+          socket.emit("send_message",data)
           setFetchAgain(!fetchAgain);
           
         } catch (error) {
@@ -68,8 +71,29 @@ export default function Chat_input({ socket, fetchAgain,setFetchAgain }) {
     setmessage(msg);
   };
 
+
+  const typingHandeler=(e)=>{
+    setmessage(e.target.value)
+    if (!typing) {
+      setTyping(true);
+      socket.emit("typing", selectedChat._id);
+    }
+    let lastTypingTime = new Date().getTime();
+    var timerLength = 3000;
+    setTimeout(() => {
+      var timeNow = new Date().getTime();
+      var timeDiff = timeNow - lastTypingTime;
+      if (timeDiff >= timerLength && typing) {
+        socket.emit("stop typing", selectedChat._id);
+        setTyping(false);
+      }
+    }, timerLength);
+
+  }
+
   return (
     <div className=" bg-gray-900 p-4 h-25 rounded-b-md w-full">
+      {istyping ? <div className="text-xs text-gray-500 flex items-center">Someone Typing ...</div>:<></>}
       <form >
         <label htmlFor="chat" className="sr-only">
           Your message
@@ -132,7 +156,7 @@ export default function Chat_input({ socket, fetchAgain,setFetchAgain }) {
             className="block mx-1 p-2 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Your message..."
             value={message}
-            onChange={(e) => setmessage(e.target.value)}
+            onChange={typingHandeler}
           ></textarea>
 
           <button

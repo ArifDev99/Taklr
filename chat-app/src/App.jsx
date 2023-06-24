@@ -16,6 +16,7 @@ import Signin from "./components/Signin";
 // import { Cookies } from "react-cookie";
 import Authchecker from "./common/Authchecker";
 import { ChatState } from "./Contex/chatProvider";
+import { useEffect } from "react";
 
 // const socket = io("http://localhost:4000");
 
@@ -53,9 +54,17 @@ const router = createBrowserRouter(
 );
 
 function App() {
-    // const {user}=ChatState();
+    const {user,setUser}=ChatState();
 
   // console.log(isLogin)
+
+  useEffect(() => {
+    
+    const userInfo=JSON.parse(localStorage.getItem("userInfo"));
+    setUser(userInfo);
+  
+  }, [])
+  
 
   return (
     <RouterProvider router={router} />

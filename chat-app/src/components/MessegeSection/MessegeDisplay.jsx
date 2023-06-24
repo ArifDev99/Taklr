@@ -8,14 +8,14 @@ export default function MessegeDisplay({ messages,user }) {
   const messageEl = useRef(null);
 
 
-  // useEffect(() => {
-  //   if (messageEl) {
-  //     messageEl.current.addEventListener('DOMNodeInserted', event => {
-  //       const { currentTarget: target } = event;
-  //       target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
-  //     });
-  //   }
-  // }, [])
+  useEffect(() => {
+    if (messageEl) {
+      messageEl.current.addEventListener('DOMNodeInserted', event => {
+        const { currentTarget: target } = event;
+        target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
+      });
+    }
+  }, [])
 
   return (
 

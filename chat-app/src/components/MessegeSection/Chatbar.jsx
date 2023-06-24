@@ -9,7 +9,7 @@ import RenameGr from "./RenameGr";
 import AddUserGroup from "../AddUserGroup";
 // import Sidedrawer from "../Search";
 
-function Chatbar({fetchAgain, setFetchAgain}) {
+function Chatbar({fetchAgain, setFetchAgain,showMychats}) {
   const [showSidedrawer, setShowSideDrawer] = useState(false);
   const { loggedUser, selectedChat } = ChatState();
 
@@ -35,8 +35,8 @@ function Chatbar({fetchAgain, setFetchAgain}) {
   return (
     <div className="flex w-full bg-black p-2 rounded-t-md">
       <div className="flex w-full justify-between  px-2">
-        <div className="w-[50%] flex md:justify-between">
-          <button>
+        <div className="w-[50%] flex md:justify-around  ">
+          <button className="hidden sm:flex px-1" onClick={showMychats}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="1.5rem"
