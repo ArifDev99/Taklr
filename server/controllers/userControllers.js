@@ -42,6 +42,7 @@ const registerUser=async (req,res)=>{
         console.log(createUser);
 
         return res.status(201).json({
+            message:"Successfully created",
             _id:createUser._id,
             firstname:createUser.firstname,
             lastname:createUser.lastname,
@@ -72,7 +73,7 @@ const authUser=async(req,res)=>{
 
         const isuserexits=await User.findOne({email});
         if(!isuserexits){
-            return res.status(400).json({message:"User not Exit"});
+            return res.status(400).json({message:"!User Not Found"});
         }
 
         

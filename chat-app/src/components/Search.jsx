@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { ChatState } from "../Contex/chatProvider";
 import UserListItem from "./UserListItem";
 
+const BASE_URI=import.meta.env.VITE_BASE_URI
+
 export default function Search() {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -22,7 +24,7 @@ export default function Search() {
       };
 
       const fetchdata = await fetch(
-        `http://localhost:4000/api/v1/user?search=${search}`,
+        `${BASE_URI}api/v1/user?search=${search}`,
         config
       ).then((res) => res.json());
       setSearchResult(fetchdata);
@@ -50,7 +52,7 @@ export default function Search() {
         body: JSON.stringify({ userid: userId }),
       };
   
-      let data = await fetch("http://localhost:4000/api/v1/chat/", config).then(
+      let data = await fetch(`${BASE_URI}api/v1/chat/`, config).then(
         (res) => res.json()
       );
       if (!chats.find((c) => c._id === data._id)) {
@@ -64,11 +66,11 @@ export default function Search() {
     }
   };
   return (
-    <div className={` w-full bg-gray-800 rounded-lg  p-2  text-white  h-full`}>
+    <div className={` w-full bg-light-blue-1 rounded-lg  p-2  text-white  h-full`}>
       <div className=" mb-4 flex ">
         <input
           type="search"
-          className=" m-0 -mr-0.5 block w-[1px] bg-black min-w-0 flex-auto rounded-l border border-solid border-neutral-300  bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-white outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-white focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600  dark:focus:border-primary"
+          className=" m-0 -mr-0.5 block w-[1px] bg-primary-light min-w-0 flex-auto rounded-l border border-solid border-neutral-300  bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-black outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600  dark:focus:border-primary"
           placeholder="Search"
           aria-label="Search"
           aria-describedby="button-addon1"
